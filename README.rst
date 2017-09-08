@@ -35,7 +35,7 @@ Steps
      tf state mv -state-out ../vpc/terraform.tfstate module.vpc.aws_subnet.main_vpc_subnet aws_subnet.main_vpc_subnet
      tf state mv -state-out ../vpc/terraform.tfstate module.vpc.aws_vpc.main aws_vpc.main
 
-#. Fix ./vpc/
+#. Fix ./test1/vpc/
    ::
      $ cd vpc
      $ rm -f main.tf outputs.tf
