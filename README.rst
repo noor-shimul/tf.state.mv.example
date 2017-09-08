@@ -12,9 +12,6 @@ configuration and state from the ./test1/ top level configuration.
 Steps
 =====
 
-#. In ./test1/vpc::
-     $ ln -sf z.local/*.tf .
-
 #. In ./test1::
      tf init
      tf plan
@@ -51,3 +48,37 @@ Steps
    subnet change.  However, the subnet already exists, and is found in the ../vpc/terraform.tfstate
    file as expected.
    
+   The output I get is::
+
+-/+ module.test_host.aws_instance.test_host (new resource required)
+id:                           "i-0729a1374eee8a684" => <computed>
+ami:                          "ami-969ab1f6" => "ami-969ab1f6"
+associate_public_ip_address:  "false" => <computed>
+availability_zone:            "us-west-1b" => <computed>
+ebs_block_device.#:           "0" => <computed>
+ephemeral_block_device.#:     "0" => <computed>
+instance_state:               "running" => <computed>
+instance_type:                "t2.micro" => "t2.micro"
+ipv6_address_count:           "" => <computed>
+ipv6_addresses.#:             "0" => <computed>
+key_name:                     "" => <computed>
+network_interface.#:          "0" => <computed>
+network_interface_id:         "eni-0ea18c22" => <computed>
+placement_group:              "" => <computed>
+primary_network_interface_id: "eni-0ea18c22" => <computed>
+private_dns:                  "ip-10-0-0-28.us-west-1.compute.internal" => <computed>
+private_ip:                   "10.0.0.28" => <computed>
+public_dns:                   "" => <computed>
+public_ip:                    "" => <computed>
+root_block_device.#:          "1" => <computed>
+security_groups.#:            "0" => <computed>
+source_dest_check:            "true" => "true"
+subnet_id:                    "subnet-1f4fb978" => "${var.vpc_subnet_id}"
+tags.%:                       "2" => "2"
+tags.Environment:             "allan" => "allan"
+tags.Name:                    "test_host" => "test_host"
+tenancy:                      "default" => <computed>
+volume_tags.%:                "0" => <computed>
+vpc_security_group_ids.#:     "1" => <computed>
+
+Plan: 1 to add, 0 to change, 1 to destroy.
