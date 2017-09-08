@@ -12,35 +12,42 @@ configuration and state from the ./test1/ top level configuration.
 Steps
 =====
 
-#. In ./test1::
+#. In ./test1
+   ::
      tf init
      tf plan
      tf apply
 
-#. 'tf state list' should show::
+#. 'tf state list' should show
+   ::
      $ tf state list
      module.test_host.aws_ami.ubuntu
      module.test_host.aws_instance.test_host
      module.vpc.aws_subnet.main_vpc_subnet
      module.vpc.aws_vpc.main
 
-#. Create an empty terraform.tfstate file in vpc/::
+#. Create an empty terraform.tfstate file in vpc/
+   ::
      cp ../files/terraform.tfstate.empty terraform.tfstate
 
-#. In ./test1/, move the vpc module resources::
+#. In ./test1/, move the vpc module resources
+   ::
      tf state mv -state-out ../vpc/terraform.tfstate module.vpc.aws_subnet.main_vpc_subnet aws_subnet.main_vpc_subnet
      tf state mv -state-out ../vpc/terraform.tfstate module.vpc.aws_vpc.main aws_vpc.main
 
-#. Fix ./vpc/::
+#. Fix ./vpc/
+   ::
      $ cd vpc
      $ rm -f main.tf outputs.tf
      $ ln -s z.remote/*.tf .
      
-#. Verify that ./vpc top level configurations with the migrated state show no changes in plan::
+#. Verify that ./vpc top level configurations with the migrated state show no changes in plan
+   ::
      $ tf init
      $ tf plan
 
-#. In ./test1/, init and plan::
+#. In ./test1/, init and plan
+   ::
      $ tf init
      $ tf plan
 
@@ -48,7 +55,8 @@ Steps
    subnet change.  However, the subnet already exists, and is found in the ../vpc/terraform.tfstate
    file as expected.
    
-   The output I get is::
+   The output I get is
+   ::
 
 -/+ module.test_host.aws_instance.test_host (new resource required)
 id:                           "i-0729a1374eee8a684" => <computed>
