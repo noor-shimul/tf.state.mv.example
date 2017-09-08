@@ -1,7 +1,7 @@
 #
 # Global config.
 terraform {
-  required_version = ">= 0.9, < 0.10"
+  required_version = ">= 0.9" #, < 0.10"
 
   #  backend          "s3"             {}
 }
