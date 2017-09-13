@@ -41,6 +41,7 @@ Steps
      $ rm -f main.tf outputs.tf
      $ ln -s z.remote/*.tf .
      
+
 #. Verify that ./vpc top level configurations with the migrated state show no changes in plan
    ::
      $ tf init
@@ -90,3 +91,51 @@ Steps
       vpc_security_group_ids.#:     "1" => <computed>
 
       Plan: 1 to add, 0 to change, 1 to destroy.
+
+
+ Workaround found:
+ =================
+
+Instead of the module, create test1/vpc.tf with just the tf_remote_state file reference::
+  data "terraform_remote_state" "vpc" {
+    backend = "local"
+
+    config = {
+      path = "../vpc/terraform.tfstate"
+    }
+  }
+
+Fix main.tf to use that for the './test_host' module::
+  # module "vpc" {
+  #   source      = "./vpc"
+  #   environment = "${var.environment}"
+  #   aws_region  = "${var.aws_region}"
+  # }
+
+  # module replaced with vpc.tf terraform_remote_state reference.
+
+  module "test_host" {
+    source        = "./test_host"
+    environment   = "${var.environment}"
+
+    #vpc_subnet_id = "${module.vpc.vpc_subnet_id}"
+
+    vpc_subnet_id = "${data.terraform_remote_state.vpc.vpc_subnet_id}"
+  }
+
+
+NOTE: In ../vpc/ one must run 'tf apply' to fix the terraform.tfstate file to have the outputs.
+      Since the plan has no changes, this just fixes the tfstate file.
+   
+After fixing the outputs in the vpc/ terraform.tfstate file, running 'tf plan' in test1/ should
+be clean::
+  Refreshing Terraform state in-memory prior to plan...
+  The refreshed state will be used to calculate this plan, but will not be
+  persisted to local or remote state storage.
+
+  data.terraform_remote_state.vpc: Refreshing state...
+  data.aws_ami.ubuntu: Refreshing state...
+  aws_instance.test_host: Refreshing state... (ID: i-0b02172054ee6c070)
+  No changes. Infrastructure is up-to-date.
+
+
