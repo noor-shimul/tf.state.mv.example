@@ -16,8 +16,14 @@ module "vpc" {
   aws_region  = "${var.aws_region}"
 }
 
+
 module "test_host" {
   source        = "./test_host"
   environment   = "${var.environment}"
+
   vpc_subnet_id = "${module.vpc.vpc_subnet_id}"
+
+  # module replaced with vpc.tf terraform_remote_state reference.
+  #vpc_subnet_id = "${data.terraform_remote_state.vpc.vpc_subnet_id}"
+
 }
